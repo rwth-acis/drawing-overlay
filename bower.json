@@ -12,7 +12,7 @@
     "seed"
   ],
   "main": "drawing-overlay.html",
-  "license": "https://github.com/rwth-acis/drawing-overlay/LICENSE.txt",
+  "license": "Apache-2",
   "homepage": "https://github.com/rwth-acis/drawing-overlay/",
   "ignore": [
     "/.*",

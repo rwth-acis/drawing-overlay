@@ -1,0 +1,151 @@
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+<link rel="import" href="../polymer/polymer.html">
+
+<script src="../fabric/dist/fabric.js"></script>
+
+<!--
+A component to allow drawing on top of other elements.
+
+Example:
+
+    <drawing-overlay>
+        <img src="http://placekitten.com/g/350/350">
+    </drawing-overlay>
+
+@demo
+-->
+<dom-module id="drawing-overlay">
+
+    <style>
+        :host {
+            position: relative;
+            display: block;
+            box-sizing: border-box;
+        }
+
+        .content-wrapper > ::content {
+            position: absolute;
+            top: 0px;
+            left: 0px;
+        }
+
+        ::content {
+            //position: relative;
+            //top: 0px;
+            //left: 0px;
+        }
+
+    </style>
+
+    <template>
+        <div class="content-wrapper"><content></content></div>
+        <canvas id="canvas" width="{{width}}" height="{{height}}"></canvas>
+    </template>
+
+</dom-module>
+
+<script>
+
+    Polymer({
+
+        is: 'drawing-overlay',
+
+        properties: {
+
+            /**
+             * `autoscale` indicates whether the canvas should be resized dynamically.
+             */
+            autoscale: Boolean,
+
+            /**
+             * The width of the drawing.
+             *
+             * @default '350'
+             */
+            width: {
+                type: Number,
+                value: 350
+            },
+
+            /**
+             * The height of the drawing.
+             *
+             * @default '350'
+             */
+            height: {
+                type: Number,
+                value: 350
+            }
+        },
+
+        listeners: {
+            'seed-element-lasers': 'sayHello'
+        },
+
+        // Element Lifecycle
+
+        ready: function() {
+            // `ready` is called after all elements have been configured, but
+            // propagates bottom-up. This element's children are ready, but parents
+            // are not.
+            //
+            // This is the point where you should make modifications to the DOM (when
+            // necessary), or kick off any processes the element wants to perform.
+
+            // because of shady DOM we have to assign the canvas a random ID otherwise fabric.js
+            // finds only the first occurrence
+            var elem = this.querySelector("canvas");
+            elem.id = Math.random();
+
+            this.canvas = new fabric.Canvas(elem.id);
+            this.canvas.isDrawingMode = true;
+            this.canvas.freeDrawingBrush.color = "red";
+            this.canvas.freeDrawingBrush.width = 5;
+        },
+
+        attached: function() {
+            // `attached` fires once the element and its parents have been inserted
+            // into a document.
+            //
+            // This is a good place to perform any work related to your element's
+            // visual state or active behavior (measuring sizes, beginning animations,
+            // loading resources, etc).
+        },
+
+        detached: function() {
+            // The analog to `attached`, `detached` fires when the element has been
+            // removed from a document.
+            //
+            // Use this to clean up anything you did in `attached`.
+        },
+
+        // Element Behavior
+
+        /**
+         * The `drawing-overlay-change` event is fired whenever the drawing is changed, e.g. by adding or
+         * removing lines.
+         *
+         * @event drawing-overlay-change
+         * @detail {{sound: String}}
+         */
+
+        /**
+         * Gets the JSON representation of the drawing.
+         *
+         * @return {object} A JSON stringified object of the drawing.
+         */
+        toJSON: function() {
+            return this.canvas.toJSON();
+        }
+
+    });
+
+</script>

@@ -105,10 +105,12 @@ Example:
             var elem = this.querySelector("canvas");
             elem.id = Math.random();
 
-            this.canvas = new fabric.Canvas(elem.id);
-            this.canvas.isDrawingMode = true;
-            this.canvas.freeDrawingBrush.color = "red";
-            this.canvas.freeDrawingBrush.width = 5;
+            this._canvas = new fabric.Canvas(elem.id);
+            this._canvas.isDrawingMode = true;
+            this._canvas.freeDrawingBrush.color = "red";
+            this._canvas.freeDrawingBrush.width = 5;
+            this._canvas.on("object:added", this._canvasObjectAdded);
+            //this._canvas.on("path:created", this._canvasObjectAdded);
         },
 
         attached: function() {
@@ -130,12 +132,16 @@ Example:
         // Element Behavior
 
         /**
-         * The `drawing-overlay-change` event is fired whenever the drawing is changed, e.g. by adding or
-         * removing lines.
+         * The `drawing-overlay-object-added` event is fired whenever a new object is added to the drawing.
          *
-         * @event drawing-overlay-change
-         * @detail {{sound: String}}
+         * @event drawing-overlay-object-added
+         * @detail {{object: Object}}
          */
+
+        _canvasObjectAdded: function(e) {
+            console.log("_canvasObjectAdded");
+            this.fire("drawing-overlay-object-added", {object: e});
+        },
 
         /**
          * Gets the JSON representation of the drawing.
@@ -143,7 +149,7 @@ Example:
          * @return {object} A JSON stringified object of the drawing.
          */
         toJSON: function() {
-            return this.canvas.toJSON();
+            return this._canvas.toJSON();
         }
 
     });

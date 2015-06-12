@@ -109,7 +109,7 @@ Example:
             this._canvas.isDrawingMode = true;
             this._canvas.freeDrawingBrush.color = "red";
             this._canvas.freeDrawingBrush.width = 5;
-            this._canvas.on("object:added", this._canvasObjectAdded);
+            this._canvas.on("object:added", this._canvasObjectAdded.bind(this));
             //this._canvas.on("path:created", this._canvasObjectAdded);
         },
 
@@ -139,8 +139,7 @@ Example:
          */
 
         _canvasObjectAdded: function(e) {
-            console.log("_canvasObjectAdded");
-            this.fire("drawing-overlay-object-added", {object: e});
+            this.fire("drawing-overlay-object-added", {object: e.target});
         },
 
         /**
@@ -150,6 +149,20 @@ Example:
          */
         toJSON: function() {
             return this._canvas.toJSON();
+        },
+
+        loadJSON: function(drawing) {
+            return this._canvas.loadFromJSON(drawing, this._canvas.renderAll.bind(this._canvas));
+        },
+
+        clear: function() {
+            this._canvas.clear();
+        },
+
+        addObject: function(object) {
+            var canvasJSON = this._canvas.toJSON();
+            canvasJSON.objects.push(object);
+            this._canvas.loadFromJSON(canvasJSON);
         }
 
     });

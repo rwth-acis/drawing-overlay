@@ -99,6 +99,15 @@ Example:
             //
             // This is the point where you should make modifications to the DOM (when
             // necessary), or kick off any processes the element wants to perform.
+        },
+
+        attached: function() {
+            // `attached` fires once the element and its parents have been inserted
+            // into a document.
+            //
+            // This is a good place to perform any work related to your element's
+            // visual state or active behavior (measuring sizes, beginning animations,
+            // loading resources, etc).
 
             // because of shady DOM we have to assign the canvas a random ID otherwise fabric.js
             // finds only the first occurrence
@@ -111,15 +120,6 @@ Example:
             this._canvas.freeDrawingBrush.width = 5;
             this._canvas.on("object:added", this._canvasObjectAdded.bind(this));
             //this._canvas.on("path:created", this._canvasObjectAdded);
-        },
-
-        attached: function() {
-            // `attached` fires once the element and its parents have been inserted
-            // into a document.
-            //
-            // This is a good place to perform any work related to your element's
-            // visual state or active behavior (measuring sizes, beginning animations,
-            // loading resources, etc).
         },
 
         detached: function() {

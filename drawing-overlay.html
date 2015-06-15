@@ -25,6 +25,7 @@ Example:
 <dom-module id="drawing-overlay">
 
     <style>
+
         :host {
             position: relative;
             display: block;
@@ -35,12 +36,6 @@ Example:
             position: absolute;
             top: 0px;
             left: 0px;
-        }
-
-        ::content {
-            //position: relative;
-            //top: 0px;
-            //left: 0px;
         }
 
     </style>
@@ -119,7 +114,7 @@ Example:
             this._canvas.freeDrawingBrush.color = "red";
             this._canvas.freeDrawingBrush.width = 5;
             this._canvas.on("object:added", this._canvasObjectAdded.bind(this));
-            //this._canvas.on("path:created", this._canvasObjectAdded);
+            this._canvas.on("path:created", this._canvasPathCreated.bind(this));
         },
 
         detached: function() {
@@ -138,8 +133,25 @@ Example:
          * @detail {{object: Object}}
          */
 
+        /**
+         * The `drawing-overlay-path-created` event is fired whenever a path is created on the canvas.
+         *
+         * @event drawing-overlay-path-created
+         * @detail {{object: Object}}
+         */
+
+        /**
+         * Is called internally when a new drawing object has been added to the canvas.
+         */
         _canvasObjectAdded: function(e) {
             this.fire("drawing-overlay-object-added", {object: e.target});
+        },
+
+        /**
+         * Is called internally when a new path has been created on the canvas.
+         */
+        _canvasPathCreated: function(e) {
+            this.fire("drawing-overlay-path-created");
         },
 
         /**
@@ -151,14 +163,28 @@ Example:
             return this._canvas.toJSON();
         },
 
+        /**
+         * Loads the JSON of a complete drawing and puts it on the canvas.
+         *
+         * @param drawing
+         * @returns {*|fabric.Canvas}
+         */
         loadJSON: function(drawing) {
             return this._canvas.loadFromJSON(drawing, this._canvas.renderAll.bind(this._canvas));
         },
 
+        /**
+         * Removes the drawing from the canvas.
+         */
         clear: function() {
             this._canvas.clear();
         },
 
+        /**
+         * Adds a drawing object to the current drawing on the canvas.
+         *
+         * @param object A drawing object.
+         */
         addObject: function(object) {
             var canvasJSON = this._canvas.toJSON();
             canvasJSON.objects.push(object);

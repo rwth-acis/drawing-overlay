@@ -115,6 +115,7 @@ Example:
             this._canvas.freeDrawingBrush.width = 5;
             this._canvas.on("object:added", this._canvasObjectAdded.bind(this));
             this._canvas.on("path:created", this._canvasPathCreated.bind(this));
+            this._canvas.on("mouse:down", this._canvasMouseDown.bind(this));
         },
 
         detached: function() {
@@ -141,6 +142,13 @@ Example:
          */
 
         /**
+         * The `drawing-overlay-mouse-down` event is fired whenever the mouse is pressed down on the canvas.
+         *
+         * @event drawing-overlay-mouse-down
+         * @detail {{object: Object}}
+         */
+
+        /**
          * Is called internally when a new drawing object has been added to the canvas.
          */
         _canvasObjectAdded: function(e) {
@@ -152,6 +160,10 @@ Example:
          */
         _canvasPathCreated: function(e) {
             this.fire("drawing-overlay-path-created");
+        },
+
+        _canvasMouseDown: function(e) {
+            this.fire("drawing-overlay-mouse-down");
         },
 
         /**

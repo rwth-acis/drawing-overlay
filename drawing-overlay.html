@@ -198,9 +198,18 @@ Example:
          * @param object A drawing object.
          */
         addObject: function(object) {
-            var canvasJSON = this._canvas.toJSON();
-            canvasJSON.objects.push(object);
-            this._canvas.loadFromJSON(canvasJSON);
+            var canvas = this._canvas;
+            fabric.util.enlivenObjects([object], function(objects) {
+                var origRenderOnAddRemove = canvas.renderOnAddRemove;
+                canvas.renderOnAddRemove = false;
+
+                objects.forEach(function(o) {
+                    canvas.add(o);
+                });
+
+                canvas.renderOnAddRemove = origRenderOnAddRemove;
+                canvas.renderAll();
+            });
         }
 
     });

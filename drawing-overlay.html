@@ -1,11 +1,21 @@
 <!--
 @license
-Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
-This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
-The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
-The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
-Code distributed by Google as part of the polymer project is also
-subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+Copyright (c) 2015, RWTH Aachen University.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+
+Based on the Polymer Seed Element Copyright (c) 2015 The Polymer Project Authors.
 -->
 <link rel="import" href="../polymer/polymer.html">
 
@@ -87,23 +97,7 @@ Example:
 
         // Element Lifecycle
 
-        ready: function() {
-            // `ready` is called after all elements have been configured, but
-            // propagates bottom-up. This element's children are ready, but parents
-            // are not.
-            //
-            // This is the point where you should make modifications to the DOM (when
-            // necessary), or kick off any processes the element wants to perform.
-        },
-
         attached: function() {
-            // `attached` fires once the element and its parents have been inserted
-            // into a document.
-            //
-            // This is a good place to perform any work related to your element's
-            // visual state or active behavior (measuring sizes, beginning animations,
-            // loading resources, etc).
-
             // because of shady DOM we have to assign the canvas a random ID otherwise fabric.js
             // finds only the first occurrence
             var elem = this.querySelector("canvas");
@@ -116,13 +110,6 @@ Example:
             this._canvas.on("object:added", this._canvasObjectAdded.bind(this));
             this._canvas.on("path:created", this._canvasPathCreated.bind(this));
             this._canvas.on("mouse:down", this._canvasMouseDown.bind(this));
-        },
-
-        detached: function() {
-            // The analog to `attached`, `detached` fires when the element has been
-            // removed from a document.
-            //
-            // Use this to clean up anything you did in `attached`.
         },
 
         // Element Behavior

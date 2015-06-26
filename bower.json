@@ -20,12 +20,12 @@
     "/demo/"
   ],
   "dependencies": {
-    "polymer": "Polymer/polymer#^1.0.0",
+    "polymer": "Polymer/polymer#^1.0.5",
     "fabric": "^1.5.0"
   },
   "devDependencies": {
-    "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
+    "iron-component-page": "PolymerElements/iron-component-page#^1.0.4",
     "web-component-tester": "*",
-    "google-youtube": "GoogleWebComponents/google-youtube#^1.0.0"
+    "google-youtube": "GoogleWebComponents/google-youtube#^1.0.6"
   }
 }

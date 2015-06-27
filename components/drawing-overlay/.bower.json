@@ -1,0 +1,40 @@
+{
+  "name": "drawing-overlay",
+  "authors": [
+    "István Koren"
+  ],
+  "description": "A component to allow drawing on top of other elements.",
+  "keywords": [
+    "web-component",
+    "web-components",
+    "polymer",
+    "seed"
+  ],
+  "main": "drawing-overlay.html",
+  "license": "Apache-2",
+  "homepage": "https://github.com/rwth-acis/drawing-overlay/",
+  "ignore": [
+    "/.*",
+    "/test/",
+    "/demo/"
+  ],
+  "dependencies": {
+    "polymer": "Polymer/polymer#^1.0.5",
+    "fabric": "^1.5.0"
+  },
+  "devDependencies": {
+    "iron-component-page": "PolymerElements/iron-component-page#^1.0.4",
+    "web-component-tester": "*",
+    "google-youtube": "GoogleWebComponents/google-youtube#^1.0.6"
+  },
+  "_release": "9f92c29b85",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "9f92c29b851a4864768fd59c7b348da843d8c54e"
+  },
+  "_source": "git://github.com/rwth-acis/drawing-overlay.git",
+  "_target": "master",
+  "_originalSource": "rwth-acis/drawing-overlay",
+  "_direct": true
+}

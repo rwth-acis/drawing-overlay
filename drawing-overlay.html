@@ -19,7 +19,7 @@ Based on the Polymer Seed Element Copyright (c) 2015 The Polymer Project Authors
 -->
 <link rel="import" href="../polymer/polymer.html">
 
-<script src="../fabric/dist/fabric.js"></script>
+<script src="../d3/d3.js"></script>
 
 <!--
 A component to allow drawing on top of other elements.
@@ -48,11 +48,19 @@ Example:
             left: 0px;
         }
 
+        path {
+            fill: none;
+            stroke: blue;
+            stroke-width: 1px;
+            stroke-linejoin: round;
+            stroke-linecap: round;
+        }
+
     </style>
 
     <template>
         <div class="content-wrapper"><content></content></div>
-        <canvas id="canvas" width="{{width}}" height="{{height}}"></canvas>
+        <svg id="drawingCanvas" viewbox="0 0 100 100" width="{{width}}" height="{{height}}"></svg>
     </template>
 
 </dom-module>

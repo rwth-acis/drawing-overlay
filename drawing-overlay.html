@@ -59,8 +59,8 @@ Example:
     </style>
 
     <template>
-        <div class="content-wrapper"><content></content></div>
-        <svg id="drawingCanvas" viewbox="0 0 100 100" width="{{width}}" height="{{height}}"></svg>
+        <!--<div class="content-wrapper"><content></content></div>-->
+        <svg id="drawingCanvas" viewBox="0 0 100 100" width="100%"></svg>
     </template>
 
 </dom-module>
@@ -109,9 +109,21 @@ Example:
         attached: function() {
             // because of shady DOM we have to assign the canvas a random ID otherwise fabric.js
             // finds only the first occurrence
-            var elem = this.querySelector("canvas");
-            elem.id = Math.random();
+            //var elem = this.querySelector("svg");
+            //elem.id = this._guid();
 
+            this._renderPath = d3.svg.line()
+                    .x(function (d) { return d[0] })
+                    .y(function (d) { return d[1] })
+                    .interpolate('basis');
+
+            this._svg = d3.select('svg')//'#\\' + elem.id)
+                    .call(d3.behavior.drag()
+                            .on('dragstart', this._dragstart.bind(this))
+                            .on('drag', this._drag.bind(this))
+                            .on('dragend', this._dragend.bind(this)));
+
+            /*
             this._canvas = new fabric.Canvas(elem.id);
             this._canvas.isDrawingMode = true;
             this._canvas.freeDrawingBrush.color = "red";
@@ -119,6 +131,8 @@ Example:
             this._canvas.on("object:added", this._canvasObjectAdded.bind(this));
             this._canvas.on("path:created", this._canvasPathCreated.bind(this));
             this._canvas.on("mouse:down", this._canvasMouseDown.bind(this));
+            */
+
         },
 
         // Element Behavior
@@ -206,7 +220,69 @@ Example:
                 canvas.renderOnAddRemove = origRenderOnAddRemove;
                 canvas.renderAll();
             });
+        },
+
+
+
+
+
+
+        _drawLine: function(pathArray) {
+            console.log('drawing');
+            var line = this._svg.append('path').datum(pathArray);
+            line.attr('d', this._renderPath);
+            line.attr('class', 'style-scope drawing-overlay');
+            /*yarray.observe(function (event) {
+                // we only implement insert events that are appended to the end of the array
+                event.values.forEach(function (value) {
+                   line.datum().push(value)
+                });
+                line.attr('d', this._renderPath)
+            })*/
+        },
+
+
+
+
+
+        _currentLine: null,
+
+
+        _dragstart: function() {
+            this._currentLine = [];
+        },
+
+        // After one dragged event is recognized, we ignore them for 33ms.
+
+        _ignoreDrag: null,
+
+        _drag: function() {
+            if (this._currentLine != null && this._ignoreDrag == null) {
+                var that = this;
+                this._ignoreDrag = window.setTimeout(function () {
+                    that._ignoreDrag = null;
+                }, 33);
+                this._currentLine.push(d3.mouse(this.$.drawingCanvas));
+            }
+        },
+
+        _dragend: function() {
+            this._drawLine(this._currentLine);
+            this._currentLine = null;
+            window.clearTimeout(this._ignoreDrag);
+            this._ignoreDrag = null;
+        },
+
+        _guid: function() {
+            function s4() {
+                return Math.floor((1 + Math.random()) * 0x10000)
+                        .toString(16)
+                        .substring(1);
+            }
+            return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+                s4() + '-' + s4() + s4() + s4();
         }
+
 
     });
 

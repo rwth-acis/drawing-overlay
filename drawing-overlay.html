@@ -123,26 +123,9 @@ Example:
                             .on('drag', this._drag.bind(this))
                             .on('dragend', this._dragend.bind(this)));
 
-            /*
-            this._canvas = new fabric.Canvas(elem.id);
-            this._canvas.isDrawingMode = true;
-            this._canvas.freeDrawingBrush.color = "red";
-            this._canvas.freeDrawingBrush.width = 5;
-            this._canvas.on("object:added", this._canvasObjectAdded.bind(this));
-            this._canvas.on("path:created", this._canvasPathCreated.bind(this));
-            this._canvas.on("mouse:down", this._canvasMouseDown.bind(this));
-            */
-
         },
 
         // Element Behavior
-
-        /**
-         * The `drawing-overlay-object-added` event is fired whenever a new object is added to the drawing.
-         *
-         * @event drawing-overlay-object-added
-         * @detail {{object: Object}}
-         */
 
         /**
          * The `drawing-overlay-path-created` event is fired whenever a path is created on the canvas.
@@ -152,29 +135,24 @@ Example:
          */
 
         /**
-         * The `drawing-overlay-mouse-down` event is fired whenever the mouse is pressed down on the canvas.
+         * The `drawing-overlay-path-appended` event is fired whenever a path is appendedon the canvas.
          *
-         * @event drawing-overlay-mouse-down
+         * @event drawing-overlay-path-appended
          * @detail {{object: Object}}
          */
 
         /**
-         * Is called internally when a new drawing object has been added to the canvas.
-         */
-        _canvasObjectAdded: function(e) {
-            this.fire("drawing-overlay-object-added", {object: e.target});
-        },
-
-        /**
          * Is called internally when a new path has been created on the canvas.
          */
-        _canvasPathCreated: function(e) {
-            this.fire("drawing-overlay-path-created");
+        _canvasPathCreated: function(pathObject) {
+            this.fire('drawing-overlay-path-created', {object: pathObject});
         },
 
-        _canvasMouseDown: function(e) {
-            this.fire("drawing-overlay-mouse-down");
+
+        _canvasPathAppended: function(pathObject) {
+            this.fire('drawing-overlay-path-appended', {object: pathObject});
         },
+
 
         /**
          * Gets the JSON representation of the drawing.
@@ -199,61 +177,31 @@ Example:
          * Removes the drawing from the canvas.
          */
         clear: function() {
-            this._canvas.clear();
+            this._svg.selectAll('path').remove()
         },
 
         /**
          * Adds a drawing object to the current drawing on the canvas.
          *
-         * @param object A drawing object.
+         * @param pathArray an array with vector values.
          */
-        addObject: function(object) {
-            var canvas = this._canvas;
-            fabric.util.enlivenObjects([object], function(objects) {
-                var origRenderOnAddRemove = canvas.renderOnAddRemove;
-                canvas.renderOnAddRemove = false;
-
-                objects.forEach(function(o) {
-                    canvas.add(o);
-                });
-
-                canvas.renderOnAddRemove = origRenderOnAddRemove;
-                canvas.renderAll();
-            });
-        },
-
-
-
-
-
-
-        _drawLine: function(pathArray) {
-            console.log('drawing');
+        addPath: function(pathArray) {
             var line = this._svg.append('path').datum(pathArray);
             line.attr('d', this._renderPath);
-            line.attr('class', 'style-scope drawing-overlay');
-            /*yarray.observe(function (event) {
-                // we only implement insert events that are appended to the end of the array
-                event.values.forEach(function (value) {
-                   line.datum().push(value)
-                });
-                line.attr('d', this._renderPath)
-            })*/
+            this._currentPath.attr('class', 'style-scope drawing-overlay');
         },
 
-
-
-
-
         _currentLine: null,
-
+        _currentPath: null,
+        _currentId: null,
 
         _dragstart: function() {
             this._currentLine = [];
+            this._currentPath = null;
+            this._currentId = this._guid();
         },
 
         // After one dragged event is recognized, we ignore them for 33ms.
-
         _ignoreDrag: null,
 
         _drag: function() {
@@ -261,14 +209,34 @@ Example:
                 var that = this;
                 this._ignoreDrag = window.setTimeout(function () {
                     that._ignoreDrag = null;
-                }, 33);
-                this._currentLine.push(d3.mouse(this.$.drawingCanvas));
+                }, 3);
+                var coordinates = d3.mouse(this.$.drawingCanvas);
+
+                this._currentLine.push(coordinates);
+
+                var pathObject = {};
+                pathObject.id = this._currentId;
+                pathObject.pathArray = [coordinates];
+
+                // now draw the path
+                if (this._currentPath === null) {
+                    this._currentPath = this._svg.append('path').datum([coordinates]);
+                    this._currentPath.attr('d', this._renderPath);
+                    this._currentPath.attr('class', 'style-scope drawing-overlay');
+                    this._currentPath.attr('id', this._currentId);
+                    this._canvasPathCreated(pathObject);
+                } else {
+                    this._currentPath.datum().push(coordinates);
+                    this._currentPath.attr('d', this._renderPath);
+                    this._canvasPathAppended(pathObject);
+                }
             }
         },
 
         _dragend: function() {
-            this._drawLine(this._currentLine);
+            //this._drawLine(this._currentLine);
             this._currentLine = null;
+            this._currentPath = null;
             window.clearTimeout(this._ignoreDrag);
             this._ignoreDrag = null;
         },
@@ -282,7 +250,6 @@ Example:
             return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
                 s4() + '-' + s4() + s4() + s4();
         }
-
 
     });
 

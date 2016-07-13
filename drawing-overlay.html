@@ -160,7 +160,7 @@ Example:
          * @return {object} A JSON stringified object of the drawing.
          */
         toJSON: function() {
-            return this._canvas.toJSON();
+            //return this._canvas.toJSON();
         },
 
         /**
@@ -170,7 +170,7 @@ Example:
          * @returns {*|fabric.Canvas}
          */
         loadJSON: function(drawing) {
-            return this._canvas.loadFromJSON(drawing, this._canvas.renderAll.bind(this._canvas));
+            //return this._canvas.loadFromJSON(drawing, this._canvas.renderAll.bind(this._canvas));
         },
 
         /**
@@ -183,12 +183,17 @@ Example:
         /**
          * Adds a drawing object to the current drawing on the canvas.
          *
-         * @param pathArray an array with vector values.
+         * @param pathObject an array with vector values.
          */
-        addPath: function(pathArray) {
-            var line = this._svg.append('path').datum(pathArray);
+        createPath: function(pathObject) {
+            var line = this._svg.append('path').datum(pathObject.pathArray);
+            line.attr('id', pathObject.id);
             line.attr('d', this._renderPath);
             this._currentPath.attr('class', 'style-scope drawing-overlay');
+        },
+
+        appendPath: function(pathObject) {
+            //TODO: get path with the id and append its datum
         },
 
         _currentLine: null,

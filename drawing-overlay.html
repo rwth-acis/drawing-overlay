@@ -46,6 +46,13 @@ Example:
             position: absolute;
             top: 0px;
             left: 0px;
+            padding: 0px;
+        }
+
+        svg {
+            position: absolute;
+            top: 0px;
+            left: 0px;
         }
 
         path {
@@ -59,8 +66,10 @@ Example:
     </style>
 
     <template>
-        <!--<div class="content-wrapper"><content></content></div>-->
-        <svg id="drawingCanvas" viewBox="0 0 100 100" width="100%"></svg>
+        <div class="content-wrapper">
+            <content></content>
+            <svg id="drawingCanvas" viewBox="0 0 100 100" width="100%"></svg>
+        </div>
     </template>
 
 </dom-module>
@@ -244,6 +253,7 @@ Example:
             this._currentPath = null;
             window.clearTimeout(this._ignoreDrag);
             this._ignoreDrag = null;
+            this._currentId = null;
         },
 
         _guid: function() {

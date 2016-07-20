@@ -200,7 +200,7 @@ Example:
             var line = this._svg.append('path').datum(pathObject.pathArray);
             line.attr('id', pathObject.id);
             line.attr('d', this._renderPath);
-            this._currentPath.attr('class', 'style-scope drawing-overlay');
+            line.attr('class', 'style-scope drawing-overlay');
         },
 
         appendPath: function(pathObject) {
